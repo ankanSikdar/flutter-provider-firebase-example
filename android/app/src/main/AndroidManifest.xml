@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.firebase_provider">
+    package="dev.ankan.firebase_provider">
    <application
         android:label="firebase_provider"
         android:icon="@mipmap/ic_launcher">
