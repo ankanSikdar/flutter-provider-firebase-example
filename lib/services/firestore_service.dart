@@ -15,7 +15,7 @@ class FirestoreService {
   }
 
   // Reads the current avatar download url
-  Stream<AvatarReference> avatarReferenceStream() {
+  Stream<AvatarReference> avatarReferenceStream({required String uid}) {
     final path = FirestorePath.avatar(uid);
     final reference = FirebaseFirestore.instance.doc(path);
     final snapshots = reference.snapshots();
