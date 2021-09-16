@@ -1,5 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_provider/screens/sign_in/sign_in_screen.dart';
+import 'package:firebase_provider/auth_widget.dart';
 import 'package:firebase_provider/services/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,9 +19,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Provider<FirebaseAuthService>(
       create: (BuildContext context) => FirebaseAuthService(),
+      // ignore: prefer_const_constructors
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: SignIn(),
+        home: const AuthWidget(),
       ),
     );
   }

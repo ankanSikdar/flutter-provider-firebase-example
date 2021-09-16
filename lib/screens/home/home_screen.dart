@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'package:firebase_provider/global_widgets/avatar.dart';
 import 'package:firebase_provider/screens/about/about_screen.dart';
+import 'package:firebase_provider/services/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   Future<void> _signOut(BuildContext context) async {
+    final auth = Provider.of<FirebaseAuthService>(context, listen: false);
     try {
-      // TODO: Implement
+      auth.signOut();
     } catch (e) {
       print(e);
     }
@@ -69,7 +72,8 @@ class HomePage extends StatelessWidget {
   Widget _buildUserInfo({required BuildContext context}) {
     // TODO: Download and show avatar from Firebase storage
     return Avatar(
-      photoUrl: '',
+      photoUrl:
+          'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
       radius: 50,
       borderColor: Colors.black54,
       borderWidth: 2.0,
