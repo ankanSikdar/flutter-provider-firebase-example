@@ -4,11 +4,9 @@ import 'package:firebase_provider/services/firestore_path.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class FirebaseStorageService {
-  FirebaseStorageService({required this.uid}) : assert(uid != null);
-  final String uid;
-
   /// Upload an avatar from file
   Future<String> uploadAvatar({
+    required String uid,
     required File file,
   }) async =>
       await upload(

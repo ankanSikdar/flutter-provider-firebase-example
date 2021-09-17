@@ -1,6 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_provider/auth_widget.dart';
 import 'package:firebase_provider/services/firebase_auth.dart';
+import 'package:firebase_provider/services/firebase_storage.dart';
+import 'package:firebase_provider/services/firestore_service.dart';
+import 'package:firebase_provider/services/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,8 +20,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider<FirebaseAuthService>(
-      create: (BuildContext context) => FirebaseAuthService(),
+    return MultiProvider(
+      providers: [
+        Provider<FirebaseAuthService>(
+          create: (context) => FirebaseAuthService(),
+        ),
+        Provider<FirestoreService>(
+          create: (context) => FirestoreService(),
+        ),
+        Provider<FirebaseStorageService>(
+          create: (context) => FirebaseStorageService(),
+        ),
+        Provider<ImagePickerService>(
+          create: (context) => ImagePickerService(),
+        ),
+      ],
       // ignore: prefer_const_constructors
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

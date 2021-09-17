@@ -1,8 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:firebase_provider/global_widgets/avatar.dart';
+import 'package:firebase_provider/models/avatar_reference.dart';
 import 'package:firebase_provider/screens/about/about_screen.dart';
 import 'package:firebase_provider/services/firebase_auth.dart';
+import 'package:firebase_provider/services/firebase_storage.dart';
+import 'package:firebase_provider/services/firestore_service.dart';
+import 'package:firebase_provider/services/image_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -26,9 +32,24 @@ class HomePage extends StatelessWidget {
 
   Future<void> _chooseAvatar(BuildContext context) async {
     try {
-      // 1. Get image from picker
-      // 2. Upload to storage
-      // 3. Save url to Firestore
+      final imagePicker =
+          Provider.of<ImagePickerService>(context, listen: false);
+      final File? imageFile =
+          await imagePicker.pickImage(source: ImageSource.gallery);
+      if (imageFile != null) {
+        final storage =
+            Provider.of<FirebaseStorageService>(context, listen: false);
+        final user = Provider.of<User>(context, listen: false);
+        final downloadUrl =
+            await storage.uploadAvatar(file: imageFile, uid: user.uid);
+        final database = Provider.of<FirestoreService>(context, listen: false);
+        await database.setAvatarReference(
+          uid: user.uid,
+          avatarReference: AvatarReference(downloadUrl),
+        );
+        await imageFile.delete();
+      }
+
       // 4. (optional) delete local file as no longer needed
     } catch (e) {
       print(e);
@@ -45,8 +66,8 @@ class HomePage extends StatelessWidget {
           onPressed: () => _onAbout(context),
         ),
         actions: <Widget>[
-          FlatButton(
-            child: Text(
+          TextButton(
+            child: const Text(
               'Logout',
               style: TextStyle(
                 fontSize: 18.0,
@@ -57,11 +78,11 @@ class HomePage extends StatelessWidget {
           ),
         ],
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(130.0),
+          preferredSize: const Size.fromHeight(130.0),
           child: Column(
             children: <Widget>[
               _buildUserInfo(context: context),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
             ],
           ),
         ),
@@ -70,14 +91,20 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildUserInfo({required BuildContext context}) {
-    // TODO: Download and show avatar from Firebase storage
-    return Avatar(
-      photoUrl:
-          'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-      radius: 50,
-      borderColor: Colors.black54,
-      borderWidth: 2.0,
-      onPressed: () => _chooseAvatar(context),
-    );
+    final database = Provider.of<FirestoreService>(context);
+    final user = Provider.of<User>(context, listen: false);
+    return StreamBuilder<AvatarReference>(
+        stream: database.avatarReferenceStream(uid: user.uid),
+        builder: (context, snapshot) {
+          final avatarReference = snapshot.data;
+          return Avatar(
+            photoUrl: avatarReference?.downloadUrl ??
+                'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+            radius: 50,
+            borderColor: Colors.black54,
+            borderWidth: 2.0,
+            onPressed: () => _chooseAvatar(context),
+          );
+        });
   }
 }
