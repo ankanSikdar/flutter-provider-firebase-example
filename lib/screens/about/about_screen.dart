@@ -50,7 +50,7 @@ class AboutPage extends StatelessWidget {
     final user = Provider.of<User>(context);
     final database = Provider.of<FirestoreService>(context);
     return StreamBuilder<AvatarReference>(
-      stream: database.avatarReferenceStream(uid: user.uid),
+      stream: database.avatarReferenceStream(),
       builder: (context, snapshot) {
         final avatarReference = snapshot.data;
         return Avatar(

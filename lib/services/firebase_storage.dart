@@ -1,12 +1,18 @@
 import 'dart:io';
 
-import 'package:firebase_provider/services/firestore_path.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
+import 'package:firebase_provider/services/firestore_path.dart';
+
 class FirebaseStorageService {
+  final String uid;
+
+  FirebaseStorageService({
+    required this.uid,
+  });
+
   /// Upload an avatar from file
   Future<String> uploadAvatar({
-    required String uid,
     required File file,
   }) async =>
       await upload(

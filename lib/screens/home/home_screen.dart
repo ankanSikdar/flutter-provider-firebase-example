@@ -40,11 +40,9 @@ class HomePage extends StatelessWidget {
         final storage =
             Provider.of<FirebaseStorageService>(context, listen: false);
         final user = Provider.of<User>(context, listen: false);
-        final downloadUrl =
-            await storage.uploadAvatar(file: imageFile, uid: user.uid);
+        final downloadUrl = await storage.uploadAvatar(file: imageFile);
         final database = Provider.of<FirestoreService>(context, listen: false);
         await database.setAvatarReference(
-          uid: user.uid,
           avatarReference: AvatarReference(downloadUrl),
         );
         await imageFile.delete();
@@ -94,7 +92,7 @@ class HomePage extends StatelessWidget {
     final database = Provider.of<FirestoreService>(context);
     final user = Provider.of<User>(context, listen: false);
     return StreamBuilder<AvatarReference>(
-        stream: database.avatarReferenceStream(uid: user.uid),
+        stream: database.avatarReferenceStream(),
         builder: (context, snapshot) {
           final avatarReference = snapshot.data;
           return Avatar(

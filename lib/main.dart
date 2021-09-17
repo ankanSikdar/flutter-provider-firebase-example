@@ -25,12 +25,6 @@ class MyApp extends StatelessWidget {
         Provider<FirebaseAuthService>(
           create: (context) => FirebaseAuthService(),
         ),
-        Provider<FirestoreService>(
-          create: (context) => FirestoreService(),
-        ),
-        Provider<FirebaseStorageService>(
-          create: (context) => FirebaseStorageService(),
-        ),
         Provider<ImagePickerService>(
           create: (context) => ImagePickerService(),
         ),
