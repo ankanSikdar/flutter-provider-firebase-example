@@ -27,7 +27,8 @@ class AboutPage extends StatelessWidget {
           children: <Widget>[
             Text(
               'Advanced Provider Tutorials',
-              style: Theme.of(context).textTheme.headline1,
+              style: Theme.of(context).textTheme.headline4,
+              textAlign: TextAlign.center,
             ),
             SizedBox(height: 32),
             Text(
